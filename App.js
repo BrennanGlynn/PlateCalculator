@@ -5,17 +5,9 @@ import PlateVisualization from "./components/PlateVisualization";
 
 const plateWeights = [45, 35, 25, 10, 5, 2.5, 1, 0.75, 0.5, 0.25];
 export default function App() {
-  const [weight, setWeight] = useState(320);
+  const [weight, setWeight] = useState("225");
   const [isPounds, setIsPounds] = useState(true);
   const [calculatedPlates, setCalculatedPlates] = useState([]);
-
-  const handleWeightChange = (e) => {
-    // ensure that e.target.value is a number or decimal
-    const re = /^[0-9\b\.]+$/;
-    if (e.target.value === "" || re.test(e.target.value)) {
-      setWeight(e.target.value);
-    }
-  };
 
   const calculateWeightPlatesPerSide = (totalWeight) => {
     // Define the weight of the barbell
@@ -79,8 +71,9 @@ export default function App() {
       <TextInput
         keyboardType="numeric"
         value={weight}
-        onChange={handleWeightChange}
+        onChangeText={setWeight}
         style={{ marginBottom: 16, borderWidth: 1 }}
+        autoFocus
       />
       <Text>
         {weight} {isPounds ? "lbs" : "kgs"}
