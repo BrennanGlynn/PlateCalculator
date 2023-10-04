@@ -1,7 +1,16 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { StyleSheet, Switch, Text, TextInput, View } from "react-native";
+import {
+  ScrollView,
+  SafeAreaView,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import PlateVisualization from "./components/PlateVisualization";
+import Constants from "expo-constants";
 
 const plateWeights = [45, 35, 25, 10, 5, 2.5, 1, 0.75, 0.5, 0.25];
 export default function App() {
@@ -11,13 +20,10 @@ export default function App() {
 
   const calculateWeightPlatesPerSide = (totalWeight) => {
     // Define the weight of the barbell
-    const barbellWeight = 45; // 45 pounds for a standard Olympic barbell
+    const barbellWeight = 45;
 
     // Subtract the weight of the barbell from the total weight
     totalWeight -= barbellWeight;
-
-    // Define an array of standard weight plate sizes
-    const plateWeights = [45, 35, 25, 10, 5, 2.5, 1, 0.75, 0.5, 0.25];
 
     // Initialize an empty object to store the plate count for each size per side
     const plateCountPerSide = {};
@@ -58,7 +64,6 @@ export default function App() {
       <Text>Plate Calculator</Text>
       <View
         style={{
-          flex: 1,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
@@ -68,19 +73,22 @@ export default function App() {
         <Text style={{ marginRight: 8 }}>{isPounds ? "Pounds" : "Kilos"}</Text>
         <Switch value={isPounds} onValueChange={setIsPounds} />
       </View>
+      <Text>
+        {weight} {isPounds ? "lbs" : "kgs"}
+      </Text>
       <TextInput
         keyboardType="numeric"
         value={weight}
         onChangeText={setWeight}
-        style={{ marginBottom: 16, borderWidth: 1 }}
+        style={{ marginBottom: 16, borderWidth: 1, width: 100 }}
         autoFocus
       />
-      <Text>
-        {weight} {isPounds ? "lbs" : "kgs"}
-      </Text>
 
-      <Text>{JSON.stringify(calculatedPlates)}</Text>
-      <PlateVisualization plates={calculatedPlates} />
+      <Text style={styles.platesPerSideLabel}>Plates per side:</Text>
+
+      <ScrollView>
+        <PlateVisualization plates={calculatedPlates} />
+      </ScrollView>
 
       <StatusBar style="auto" />
     </View>
@@ -92,7 +100,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: "25px",
+    marginTop: Constants.statusBarHeight,
+  },
+  platesPerSideLabel: {
+    fontSize: 48,
+    fontWeight: "700",
+  },
+  scrollView: {
+    backgroundColor: "pink",
+    marginHorizontal: 20,
   },
 });
