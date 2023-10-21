@@ -66,20 +66,17 @@ const PlateCalculator = () => {
         marginBottom: 16,
       }}
     >
-      <Text>Plate Calculator</Text>
-      <Text style={{ marginRight: 8 }}>{isPounds ? "Pounds" : "Kilos"}</Text>
-      <Switch value={isPounds} onValueChange={setIsPounds} />
-
-      <Text>
-        {weight} {isPounds ? "lbs" : "kgs"}
-      </Text>
-      <TextInput
-        keyboardType="numeric"
-        value={weight}
-        onChangeText={setWeight}
-        style={{ marginBottom: 16, borderWidth: 1, width: 100 }}
-        autoFocus
-      />
+      <Text style={styles.heading}>Barbell Plate Calculator</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          keyboardType="numeric"
+          value={weight}
+          onChangeText={setWeight}
+          style={styles.input}
+          autoFocus
+        />
+        <Text style={styles.inputLabel}>{isPounds ? "Pounds" : "Kilos"}</Text>
+      </View>
 
       <Text style={styles.platesPerSideLabel}>Plates per side:</Text>
 
@@ -101,8 +98,22 @@ const styles = StyleSheet.create({
     padding: "25px",
     marginTop: Constants.statusBarHeight,
   },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "red",
+  },
+  input: { marginBottom: 16, borderWidth: 1, width: 100 },
+  inputLabel: { fontSize: 14, fontWeight: "700" },
+  heading: {
+    fontSize: 32,
+    fontWeight: "700",
+    marginBottom: 16,
+  },
   platesPerSideLabel: {
-    fontSize: 48,
+    fontSize: 24,
     fontWeight: "700",
   },
   scrollView: {

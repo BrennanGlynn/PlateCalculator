@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Svg, Circle, Text as SVGText } from "react-native-svg";
+import PropTypes from "prop-types";
 import removeLeadingZero from "../utility/removeLeadingZero";
 
 const PlateVisualization = ({ plates }) => {
@@ -104,7 +105,6 @@ const getPlateSize = (weight) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    padding: 10,
     marginBottom: 20,
     flexWrap: "wrap",
     justifyContent: "center",
@@ -121,5 +121,14 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
+
+PlateVisualization.propTypes = {
+  plates: PropTypes.arrayOf(
+    PropTypes.shape({
+      weight: PropTypes.number.isRequired,
+      count: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
+};
 
 export default PlateVisualization;
