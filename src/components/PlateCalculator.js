@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  Text,
-  TextInput,
-  View,
-  Switch,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
-import Constants from "expo-constants";
+import { View, ScrollView, StyleSheet } from "react-native";
 import PlateVisualization from "./PlateVisualization";
 import { StatusBar } from "expo-status-bar";
+import { Input, Text } from "@rneui/themed";
 
 const plateWeights = [45, 35, 25, 10, 5, 2.5, 1, 0.75, 0.5, 0.25];
 const PlateCalculator = () => {
   const [weight, setWeight] = useState("225");
-  const [isPounds, setIsPounds] = useState(true);
   const [calculatedPlates, setCalculatedPlates] = useState([]);
 
   const calculateWeightPlatesPerSide = (totalWeight) => {
@@ -59,26 +51,24 @@ const PlateCalculator = () => {
   }, [weight]);
 
   return (
-    <View
-      style={{
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: 16,
-      }}
-    >
-      <Text style={styles.heading}>Barbell Plate Calculator</Text>
-      <View style={styles.inputContainer}>
-        <TextInput
-          keyboardType="numeric"
+    <View style={styles.container}>
+      <Text h3 style={styles.heading}>
+        Barbell Plate Calculator
+      </Text>
+      <View style={styles.inputRow}>
+        <Input
+          placeholder="Enter weight"
+          inputStyle={styles.input}
+          containerStyle={styles.inputContainer}
+          label="Weight"
           value={weight}
-          onChangeText={setWeight}
-          style={styles.input}
-          autoFocus
+          onChangeText={(text) => setWeight(text)}
+          keyboardType="numeric"
         />
-        <Text style={styles.inputLabel}>{isPounds ? "Pounds" : "Kilos"}</Text>
       </View>
-
-      <Text style={styles.platesPerSideLabel}>Plates per side:</Text>
+      <Text style={styles.platesPerSideLabel} h4>
+        Plates per side:
+      </Text>
 
       <ScrollView>
         <PlateVisualization plates={calculatedPlates} />
@@ -92,25 +82,20 @@ const PlateCalculator = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "flex-start",
-    padding: "25px",
-    marginTop: Constants.statusBarHeight,
+    justifyContent: "space-between",
+    padding: 24,
   },
-  inputContainer: {
+  inputRow: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "red",
   },
-  input: { marginBottom: 16, borderWidth: 1, width: 100 },
-  inputLabel: { fontSize: 14, fontWeight: "700" },
+  input: { flex: 1, fontSize: 14, paddingVertical: 0 },
+  inputContainer: { paddingHorizontal: 0 },
   heading: {
     fontSize: 32,
     fontWeight: "700",
     marginBottom: 16,
+    alignSelf: "flex-start",
   },
   platesPerSideLabel: {
     fontSize: 24,

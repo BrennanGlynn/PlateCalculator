@@ -2,7 +2,6 @@ import React from "react";
 import { View } from "react-native";
 import PlateCalculator from "../components/PlateCalculator";
 import { StyleSheet } from "react-native";
-import Constants from "expo-constants";
 
 const styles = StyleSheet.create({
   container: {
@@ -10,12 +9,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "flex-start",
-    padding: "25px",
-    marginTop: Constants.statusBarHeight,
   },
 });
 
-const HomeScreen = () => {
+const Home = () => {
   return (
     <View style={styles.container}>
       <PlateCalculator />
@@ -23,4 +20,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default Home;
