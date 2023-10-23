@@ -9,6 +9,12 @@ import PlateSelector from "./src/screens/PlateSelector";
 import { WeightPlateProvider } from "./src/context/WeightPlateContext";
 // import theme from "./src/Theme";
 
+// TODO - Add theme
+// TODO - Add dark mode
+// TODO - Add ability to save weight plates to local storage
+// TODO - Add ability to save current weight to local storage
+// TODO - Add ability to save different lift weights
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {
