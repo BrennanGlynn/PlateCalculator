@@ -4,10 +4,14 @@ import PlateVisualization from "./PlateVisualization";
 import { StatusBar } from "expo-status-bar";
 import { Input, Text } from "@rneui/themed";
 import { useWeightPlateContext } from "../context/WeightPlateContext";
+import { formatFloat } from "../utility/utils";
 
 const PlateCalculator = () => {
   const [weight, setWeight] = useState("225");
-  const [calculatedPlates, setCalculatedPlates] = useState([]);
+  const [calculatedPlates, setCalculatedPlates] = useState({
+    platesPerSide: [],
+    leftoverWeight: 0,
+  });
   const { selectedWeights } = useWeightPlateContext();
 
   const plateWeights = selectedWeights;
@@ -40,17 +44,32 @@ const PlateCalculator = () => {
     // Iterate through the plate sizes and add the counts to the result array
     for (const plate of plateWeights) {
       if (plateCountPerSide[plate] > 0) {
-        result.push({ size: plate, count: plateCountPerSide[plate] });
+        result.push({
+          size: plate,
+          count: plateCountPerSide[plate],
+        });
       }
     }
 
-    return result;
+    return { platesPerSide: result, leftoverWeight: totalWeight };
+  };
+
+  const checkForLeftoverWeight = () => {
+    const { leftoverWeight } = calculatedPlates;
+    const totalDisplayedWeight = formatFloat(weight - leftoverWeight);
+    if (leftoverWeight > 0) {
+      alert(
+        `Error: The plates shown only weigh ${totalDisplayedWeight} pounds. They are missing ${formatFloat(
+          leftoverWeight,
+        )} pounds from your target weight. Enable smaller sized plates to display your target weight.`,
+      );
+    }
   };
 
   useEffect(() => {
     // Calculate the plates per side
-    const platesPerSide = calculateWeightPlatesPerSide(weight);
-    setCalculatedPlates(platesPerSide);
+    const calculatedResult = calculateWeightPlatesPerSide(weight);
+    setCalculatedPlates(calculatedResult);
   }, [weight, selectedWeights]);
 
   return (
@@ -67,14 +86,21 @@ const PlateCalculator = () => {
           value={weight}
           onChangeText={(text) => setWeight(text)}
           keyboardType="numeric"
+          onBlur={checkForLeftoverWeight}
         />
       </View>
       <Text style={styles.platesPerSideLabel} h4>
         Plates per side:
       </Text>
+      <Text style={styles.displayedWeightLabel} h5>
+        Showing {formatFloat(weight - calculatedPlates.leftoverWeight)} pounds
+      </Text>
 
       <ScrollView>
-        <PlateVisualization plates={calculatedPlates} />
+        <PlateVisualization
+          plates={calculatedPlates.platesPerSide}
+          leftoverWeight={calculatedPlates.leftoverWeight}
+        />
       </ScrollView>
 
       <StatusBar style="auto" />
@@ -102,6 +128,9 @@ const styles = StyleSheet.create({
   platesPerSideLabel: {
     fontSize: 24,
     fontWeight: "700",
+  },
+  displayedWeightLabel: {
+    color: "gray",
   },
   scrollView: {
     backgroundColor: "pink",

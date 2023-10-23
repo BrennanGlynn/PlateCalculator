@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Svg, Circle, Text as SVGText } from "react-native-svg";
 import PropTypes from "prop-types";
-import removeLeadingZero from "../utility/removeLeadingZero";
+import { removeLeadingZero } from "../utility/utils";
 import { WEIGHT_PLATES } from "../constants/WEIGHT_PLATES";
 
 const PlateVisualization = ({ plates }) => {
