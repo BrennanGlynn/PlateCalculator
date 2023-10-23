@@ -6,15 +6,14 @@ const WeightPlateContext = createContext();
 export const useWeightPlateContext = () => useContext(WeightPlateContext);
 
 export const WeightPlateProvider = ({ children }) => {
-  const [selectedWeights, setSelectedWeights] = useState([
-    0, 1, 2, 3, 4, 5, 6, 7, 9,
-  ]);
+  const defaultSelectedPlates = [0.25, 0.5, 0.75, 1, 2.5, 5, 10, 25, 45];
+  const [selectedWeights, setSelectedWeights] = useState(defaultSelectedPlates);
 
   const toggleWeightSelection = (weight) => {
     const uniquePlates = new Set(selectedWeights);
-    uniquePlates.has(weight.id)
-      ? uniquePlates.delete(weight.id)
-      : uniquePlates.add(weight.id);
+    uniquePlates.has(weight.size)
+      ? uniquePlates.delete(weight.size)
+      : uniquePlates.add(weight.size);
     setSelectedWeights(Array.from(uniquePlates));
   };
 

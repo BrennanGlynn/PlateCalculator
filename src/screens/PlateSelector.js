@@ -1,26 +1,30 @@
-import { CheckBox, Text } from "@rneui/themed/dist";
+import { CheckBox, Text } from "@rneui/themed";
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { useWeightPlateContext } from "../context/WeightPlateContext";
-import { availableWeights } from "../utility/availableWeights";
+import { WEIGHT_PLATES } from "../constants/WEIGHT_PLATES";
 
 const PlateSelector = () => {
   const { selectedWeights, toggleWeightSelection } = useWeightPlateContext();
 
   // Descending sort based on size
-  const sortedPlates = availableWeights.sort((a, b) => b.size - a.size);
+  const sortedPlates = Object.keys(WEIGHT_PLATES)
+    .map((plateKey) => WEIGHT_PLATES[plateKey])
+    .sort((a, b) => b.size - a.size);
 
   return (
     <View style={styles.container}>
       <Text>Select Weight Plates:</Text>
-      {sortedPlates.map((weight) => (
-        <CheckBox
-          key={weight.id}
-          title={weight.size}
-          checked={selectedWeights.includes(weight.id)}
-          onPress={() => toggleWeightSelection(weight)}
-        />
-      ))}
+      {sortedPlates.map((weight) => {
+        return (
+          <CheckBox
+            key={weight.size}
+            title={weight.size}
+            checked={selectedWeights.includes(weight.size)}
+            onPress={() => toggleWeightSelection(weight)}
+          />
+        );
+      })}
     </View>
   );
 };
