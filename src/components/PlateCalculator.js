@@ -3,11 +3,17 @@ import { View, ScrollView, StyleSheet } from "react-native";
 import PlateVisualization from "./PlateVisualization";
 import { StatusBar } from "expo-status-bar";
 import { Input, Text } from "@rneui/themed";
+import { availableWeights } from "../utility/availableWeights";
+import { useWeightPlateContext } from "../context/WeightPlateContext";
 
-const plateWeights = [45, 35, 25, 10, 5, 2.5, 1, 0.75, 0.5, 0.25];
 const PlateCalculator = () => {
   const [weight, setWeight] = useState("225");
   const [calculatedPlates, setCalculatedPlates] = useState([]);
+  const { selectedWeights } = useWeightPlateContext();
+
+  const plateWeights = selectedWeights.map((weightId) => {
+    return availableWeights.find((weight) => weight.id === weightId).size;
+  });
 
   const calculateWeightPlatesPerSide = (totalWeight) => {
     // Define the weight of the barbell
@@ -48,7 +54,7 @@ const PlateCalculator = () => {
     // Calculate the plates per side
     const platesPerSide = calculateWeightPlatesPerSide(weight);
     setCalculatedPlates(platesPerSide);
-  }, [weight]);
+  }, [weight, selectedWeights]);
 
   return (
     <View style={styles.container}>
@@ -84,7 +90,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 24,
   },
   inputRow: {
     flexDirection: "row",
