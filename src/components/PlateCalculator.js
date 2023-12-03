@@ -9,6 +9,7 @@ import {
   DEFAULT_BARBELL_WEIGHT,
   DEFAULT_MAX_COUNT,
 } from "../constants/defaults";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PlateCalculator = () => {
   const [weight, setWeight] = useState("225");
@@ -19,6 +20,16 @@ const PlateCalculator = () => {
   const { selectedWeights, maxWeightCounts } = useWeightPlateContext();
 
   const plateWeights = selectedWeights;
+
+  const handleWeightChange = (newWeightText) => {
+    const isNumberRegex = /^-?\d+(\.\d+)?$/;
+    console.log(isNumberRegex.test(newWeightText), "test");
+    const isNumber = isNumberRegex.test(newWeightText);
+    if (isNumber) {
+      setWeight(newWeightText);
+      storeWeightToStorage(newWeightText);
+    }
+  };
 
   const calculateWeightPlatesPerSide = (totalWeight) => {
     // Define the weight of the barbell
@@ -40,7 +51,7 @@ const PlateCalculator = () => {
         const maxPlates =
           maxWeightCounts[plate] || maxWeightCounts[plate] === 0
             ? maxWeightCounts[plate] // If the max weight count is defined for the plate size, use it
-            : DEFAULT_MAX_COUNT; // Otherwise, use the default maximum
+            : Infinity; // Otherwise, use the default maximum
         const numPlates = Math.min(
           maxPlates,
           Math.floor(totalWeight / 2 / plate),
@@ -71,10 +82,27 @@ const PlateCalculator = () => {
     const totalDisplayedWeight = formatFloat(weight - leftoverWeight);
     if (leftoverWeight > 0) {
       alert(
-        `Error: The plates shown only weigh ${totalDisplayedWeight} pounds. They are missing ${formatFloat(
+        `The plates shown only weigh ${totalDisplayedWeight} pounds. They are missing ${formatFloat(
           leftoverWeight,
         )} pounds from your target weight. Try adjusting your selected plates.`,
       );
+    }
+  };
+
+  const storeWeightToStorage = async (newWeight) => {
+    try {
+      await AsyncStorage.setItem("weight", newWeight);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const readWeightFromStorage = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("weight");
+      setWeight(jsonValue != null ? jsonValue : "225");
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -83,6 +111,10 @@ const PlateCalculator = () => {
     const calculatedResult = calculateWeightPlatesPerSide(weight);
     setCalculatedPlates(calculatedResult);
   }, [weight, selectedWeights, maxWeightCounts]);
+
+  useEffect(() => {
+    readWeightFromStorage();
+  }, []);
 
   const showingVal =
     weight <= DEFAULT_BARBELL_WEIGHT
@@ -103,7 +135,7 @@ const PlateCalculator = () => {
               containerStyle={styles.inputContainer}
               label="Weight"
               value={weight}
-              onChangeText={(text) => setWeight(text)}
+              onChangeText={(text) => handleWeightChange(text)}
               keyboardType="numeric"
               onBlur={checkForLeftoverWeight}
             />
@@ -111,7 +143,11 @@ const PlateCalculator = () => {
           <Text style={styles.platesPerSideLabel} h4>
             Plates per side:
           </Text>
-          <Text style={styles.displayedWeightLabel} h5>
+          <Text
+            style={styles.displayedWeightLabel}
+            onPress={() => checkForLeftoverWeight()}
+            h5
+          >
             Showing {showingVal} pounds
           </Text>
         </View>

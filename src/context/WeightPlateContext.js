@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from "react";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { readMaxWeightCountsFromStorage } from "../utility/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const WeightPlateContext = createContext();
 
@@ -17,13 +18,38 @@ export const WeightPlateProvider = ({ children }) => {
     uniquePlates.has(weight.size)
       ? uniquePlates.delete(weight.size)
       : uniquePlates.add(weight.size);
-    setSelectedWeights(Array.from(uniquePlates));
+    const uniquePlatesArray = Array.from(uniquePlates);
+    setSelectedWeights(uniquePlatesArray);
+    storeSelectedWeights(uniquePlatesArray);
   };
 
   const getStoredMaxWeightCounts = async () => {
     try {
-      const maxPlates = await readMaxWeightCountsFromStorage();
-      setMaxWeightCounts(maxPlates);
+      const jsonValue = await AsyncStorage.getItem("maxWeightCounts");
+      setMaxWeightCounts(jsonValue != null ? JSON.parse(jsonValue) : {});
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const storeSelectedWeights = async (newSelectedWeights) => {
+    try {
+      await AsyncStorage.setItem(
+        "selectedWeights",
+        JSON.stringify(newSelectedWeights),
+      );
+    } catch (e) {
+      // Maybe one day I'll actually log this
+      console.error(e);
+    }
+  };
+
+  const getStoredSelectedWeights = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("selectedWeights");
+      setSelectedWeights(
+        jsonValue != null ? JSON.parse(jsonValue) : defaultSelectedPlates,
+      );
     } catch (e) {
       console.error(e);
     }
@@ -31,6 +57,7 @@ export const WeightPlateProvider = ({ children }) => {
 
   useEffect(() => {
     getStoredMaxWeightCounts();
+    getStoredSelectedWeights();
   }, []);
 
   return (

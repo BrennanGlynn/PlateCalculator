@@ -9,5 +9,5 @@ export const WEIGHT_PLATES = {
   25: { size: 25, color: "#017F26" },
   35: { size: 35, color: "#017F26" },
   45: { size: 45, color: "#00266D" },
-  55: { size: 55, color: "#ffaaaa" },
+  55: { size: 55, color: "#cc3333" },
 };

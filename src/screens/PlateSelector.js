@@ -43,10 +43,12 @@ const PlateSelector = () => {
     }
 
     if (isInteger) {
-      setMaxWeightCounts({
+      const newMaxWeightCounts = {
         ...maxWeightCounts,
         [weight.size]: parseInt(count),
-      });
+      };
+      setMaxWeightCounts(newMaxWeightCounts);
+      storeMaxWeightCounts(newMaxWeightCounts);
     }
   };
 
@@ -54,6 +56,7 @@ const PlateSelector = () => {
     const newMaxWeightCounts = { ...maxWeightCounts };
     delete newMaxWeightCounts[weight.size];
     setMaxWeightCounts(newMaxWeightCounts);
+    storeMaxWeightCounts(newMaxWeightCounts);
   };
   // Descending sort based on size
   const sortedPlates = Object.keys(WEIGHT_PLATES)
@@ -65,22 +68,17 @@ const PlateSelector = () => {
     setSelectedWeight(weight);
   };
 
-  const storeMaxWeightCounts = async () => {
+  const storeMaxWeightCounts = async (newMaxWeightCounts) => {
     try {
       await AsyncStorage.setItem(
         "maxWeightCounts",
-        JSON.stringify(maxWeightCounts),
+        JSON.stringify(newMaxWeightCounts),
       );
     } catch (e) {
       // Maybe one day I'll actually log this
       console.error(e);
     }
   };
-
-  useEffect(() => {
-    // Store the max weight counts in local storage
-    storeMaxWeightCounts();
-  }, [maxWeightCounts]);
 
   return (
     <ScrollView style={styles.container}>
@@ -192,10 +190,9 @@ const MaxPlateDialog = ({
   const dialogInputRef = React.createRef();
 
   useEffect(() => {
-    if (dialogInputRef.current) {
-      dialogInputRef.current.focus();
-    }
-  }, [isDialogOpen]);
+    // This is broken for some reason inside a dialog
+    dialogInputRef?.current?.focus();
+  }, [dialogInputRef]);
 
   const currentMaxCount = maxWeightCounts[selectedWeight?.size] || null;
 
@@ -219,10 +216,7 @@ const MaxPlateDialog = ({
           </Text>
           &apos;s
         </Text>
-        <Text>
-          If this is left empty, the calculator will use the default max of{" "}
-          {DEFAULT_MAX_COUNT}
-        </Text>
+        <Text>If this is left empty, there will be no limit.</Text>
       </View>
       <View style={styles.inputContainer}>
         <Input
@@ -233,6 +227,7 @@ const MaxPlateDialog = ({
           onChangeText={(text) =>
             handleMaxWeightCountChange(selectedWeight, text)
           }
+          autoFocus
         />
       </View>
       <View style={styles.dialogActionButtons}>
