@@ -32,7 +32,7 @@ const PlateVisualization = ({ plates }) => {
                 strokeWidth="2"
               />
               <SVGText
-                x="25%"
+                x="20%"
                 y="50%"
                 fill={getPlateTextColor(plate.size)}
                 fontSize="16"
@@ -43,7 +43,7 @@ const PlateVisualization = ({ plates }) => {
                 {removeLeadingZero(plate.size)}
               </SVGText>
               <SVGText
-                x="75%"
+                x="80%"
                 y="50%"
                 fill={getPlateTextColor(plate.size)}
                 fontSize="16"
@@ -65,13 +65,14 @@ const PlateVisualization = ({ plates }) => {
 };
 
 const getPlateTextColor = (size) => {
-  switch (size) {
-    case 10:
-    case 0.25:
-      return "black";
-    default:
-      return "white";
-  }
+  const plateColor = WEIGHT_PLATES[size].color;
+  const luminance =
+    (0.299 * parseInt(plateColor.substring(1, 3), 16) +
+      0.587 * parseInt(plateColor.substring(3, 5), 16) +
+      0.114 * parseInt(plateColor.substring(5, 7), 16)) /
+    255;
+
+  return luminance > 0.5 ? "#000000" : "#FFFFFF";
 };
 
 const calculatePlateSize = (size) => {
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     flexWrap: "wrap",
     justifyContent: "center",
-    padding: 24,
+    padding: 12,
   },
   plateGroup: {
     alignItems: "center",

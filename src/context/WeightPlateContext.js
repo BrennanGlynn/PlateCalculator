@@ -8,6 +8,7 @@ export const useWeightPlateContext = () => useContext(WeightPlateContext);
 export const WeightPlateProvider = ({ children }) => {
   const defaultSelectedPlates = [0.25, 0.5, 0.75, 1, 2.5, 5, 10, 25, 45];
   const [selectedWeights, setSelectedWeights] = useState(defaultSelectedPlates);
+  const [maxWeightCounts, setMaxWeightCounts] = React.useState({});
 
   const toggleWeightSelection = (weight) => {
     const uniquePlates = new Set(selectedWeights);
@@ -19,7 +20,12 @@ export const WeightPlateProvider = ({ children }) => {
 
   return (
     <WeightPlateContext.Provider
-      value={{ selectedWeights, toggleWeightSelection }}
+      value={{
+        selectedWeights,
+        toggleWeightSelection,
+        maxWeightCounts,
+        setMaxWeightCounts,
+      }}
     >
       {children}
     </WeightPlateContext.Provider>

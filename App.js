@@ -14,8 +14,6 @@ import { WeightPlateProvider } from "./src/context/WeightPlateContext";
 // TODO - Add ability to save weight plates to local storage
 // TODO - Add ability to save current weight to local storage
 // TODO - Add ability to save different lift weights
-// TODO - Add ability to set max count for each plate
-// TODO - Show total and leftover weight if there is any
 
 const Stack = createNativeStackNavigator();
 
