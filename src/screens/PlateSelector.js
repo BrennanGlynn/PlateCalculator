@@ -19,6 +19,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 import { DEFAULT_MAX_COUNT } from "../constants/defaults";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PlateSelector = () => {
   const {
@@ -63,6 +64,23 @@ const PlateSelector = () => {
     setIsDialogOpen(true);
     setSelectedWeight(weight);
   };
+
+  const storeMaxWeightCounts = async () => {
+    try {
+      await AsyncStorage.setItem(
+        "maxWeightCounts",
+        JSON.stringify(maxWeightCounts),
+      );
+    } catch (e) {
+      // Maybe one day I'll actually log this
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    // Store the max weight counts in local storage
+    storeMaxWeightCounts();
+  }, [maxWeightCounts]);
 
   return (
     <ScrollView style={styles.container}>

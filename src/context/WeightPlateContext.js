@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import PropTypes from "prop-types";
+import { useEffect } from "react";
+import { readMaxWeightCountsFromStorage } from "../utility/utils";
 
 const WeightPlateContext = createContext();
 
@@ -17,6 +19,19 @@ export const WeightPlateProvider = ({ children }) => {
       : uniquePlates.add(weight.size);
     setSelectedWeights(Array.from(uniquePlates));
   };
+
+  const getStoredMaxWeightCounts = async () => {
+    try {
+      const maxPlates = await readMaxWeightCountsFromStorage();
+      setMaxWeightCounts(maxPlates);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    getStoredMaxWeightCounts();
+  }, []);
 
   return (
     <WeightPlateContext.Provider

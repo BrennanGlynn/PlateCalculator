@@ -11,7 +11,6 @@ import { WeightPlateProvider } from "./src/context/WeightPlateContext";
 
 // TODO - Add theme
 // TODO - Add dark mode
-// TODO - Add ability to save weight plates to local storage
 // TODO - Add ability to save current weight to local storage
 // TODO - Add ability to save different lift weights
 
